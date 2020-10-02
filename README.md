@@ -4,37 +4,27 @@
 [![Coverage](https://coveralls.io/repos/github/python-platonic/typecasts/badge.svg?branch=master)](https://coveralls.io/github/python-platonic/typecasts?branch=master)
 [![Python Version](https://img.shields.io/pypi/pyversions/typecasts.svg)](https://pypi.org/project/typecasts/)
 [![wemake-python-styleguide](https://img.shields.io/badge/style-wemake-000000.svg)](https://github.com/wemake-services/wemake-python-styleguide)
+![PyPI - License](https://img.shields.io/pypi/l/typecasts)
 
-Implicit type conversions for Python
+Convert from one Python type to another in a centralized way.
 
 
 ## Features
 
-- Fully typed with annotations and checked with mypy, [PEP561 compatible](https://www.python.org/dev/peps/pep-0561/)
-- Add yours!
+```python
+from typecasts import casts
 
+str_to_bytes_coder = casts[str, bytes]
+
+str_to_bytes_coder('boo')
+# b'boo'
+```
 
 ## Installation
 
 ```bash
 pip install typecasts
 ```
-
-
-## Example
-
-Showcase how your project can be used:
-
-```python
-from typecasts.example import some_function
-
-print(some_function(3, 4))
-# => 7
-```
-
-## License
-
-[MIT](https://github.com/python-platonic/typecasts/blob/master/LICENSE)
 
 
 ## Credits
