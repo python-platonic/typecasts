@@ -27,6 +27,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.6"
 documented = "^0.1.1"
+"backports.cached-property" = { version = "^1.0.0", python = "<3.8" }
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.782"

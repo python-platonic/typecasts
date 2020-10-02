@@ -1,13 +1,23 @@
 import typing
 from dataclasses import dataclass
-from functools import cached_property
 
 from documented import DocumentedError
+
+try:
+    from functools import cached_property
+
+except ImportError:  # pragma: nocover
+    # For Python <3.8
+    # noinspection PyUnresolvedReferences
+    from backports.cached_property import (  # type: ignore
+        cached_property,
+    )
+
 
 if typing.TYPE_CHECKING:  # pragma: no cover
     # This is to avoid circular imports in the form of
     #     typecasts.errors ⇆ typecasts.main
-    from typecasts import Typecasts  # noqa: WPS433
+    from typecasts import Typecasts
 
 
 @dataclass
