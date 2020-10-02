@@ -3,14 +3,18 @@ from dataclasses import dataclass
 
 from documented import DocumentedError
 
-try:
-    from functools import cached_property
+if typing.TYPE_CHECKING:  # pragma: nocover
+    # This one is always available in dev environment, we let mypy to use it.
+    from backports.cached_property import cached_property
 
-except ImportError:  # pragma: nocover
-    # For Python <3.8
-    from backports.cached_property import (  # type: ignore
-        cached_property,
-    )
+else:
+    # In production environment, we will choose the library that is available.
+    try:
+        from functools import cached_property
+
+    except ImportError:  # pragma: nocover
+        # For Python <3.8
+        from backports.cached_property import cached_property
 
 
 if typing.TYPE_CHECKING:  # pragma: no cover
