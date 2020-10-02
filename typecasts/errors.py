@@ -8,7 +8,6 @@ try:
 
 except ImportError:  # pragma: nocover
     # For Python <3.8
-    # noinspection PyUnresolvedReferences
     from backports.cached_property import (  # type: ignore
         cached_property,
     )
