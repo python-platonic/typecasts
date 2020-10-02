@@ -12,7 +12,11 @@ TypePair = Tuple[Type[SourceType], Type[DestinationType]]
 Cast = Callable[[SourceType], DestinationType]
 
 
-class Typecasts(Dict[Tuple[type, type], Callable[[Any], Any]]):
+# Regrettably, we *have* to use `Any` here. I do not see any other way.
+class Typecasts(Dict[  # type: ignore
+    Tuple[type, type],
+    Callable[[Any], Any]],
+):
     def __getitem__(
         self,
         type_pair: Tuple[Type[SourceType], Type[DestinationType]],
