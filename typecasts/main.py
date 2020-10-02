@@ -1,6 +1,4 @@
-from typing import (
-    TypeVar, Callable, Dict, Tuple, Any, Type,
-)
+from typing import Any, Callable, Dict, Tuple, Type, TypeVar
 
 from typecasts.errors import RedundantIdentity, TypecastNotFound
 from typecasts.identity import identity
@@ -15,12 +13,15 @@ Cast = Callable[[SourceType], DestinationType]
 # Regrettably, we *have* to use `Any` here. I do not see any other way.
 class Typecasts(Dict[  # type: ignore
     Tuple[type, type],
-    Callable[[Any], Any]],
-):
+    Callable[[Any], Any],
+]):
+    """Typecasts repository."""
+
     def __getitem__(
         self,
         type_pair: Tuple[Type[SourceType], Type[DestinationType]],
     ) -> Callable[[SourceType], DestinationType]:
+        """Get typecast function for given type pair."""
         source_type, destination_type = type_pair
 
         if source_type == destination_type:
@@ -43,6 +44,7 @@ class Typecasts(Dict[  # type: ignore
         type_pair: Tuple[Type[SourceType], Type[DestinationType]],
         cast: Callable[[SourceType], DestinationType],
     ) -> None:
+        """Specify typecast function for given type pair."""
         source_type, destination_type = type_pair
 
         if source_type == destination_type:
@@ -59,7 +61,9 @@ class Typecasts(Dict[  # type: ignore
         destination_type: Type[DestinationType],
     ):
         """Decorator to register a function as a typecast."""
-        def registrar(function: Callable[[SourceType], DestinationType]):
+        def registrar(  # noqa: WPS430
+            function: Callable[[SourceType], DestinationType],
+        ):
             self[source_type, destination_type] = function
             return function
 

@@ -1,7 +1,6 @@
 from typing import TypeVar
 
-
-T = TypeVar('T')
+T = TypeVar('T')  # noqa: WPS111
 
 
 def identity(anything: T) -> T:

@@ -7,7 +7,7 @@ from documented import DocumentedError
 if typing.TYPE_CHECKING:
     # This is to avoid circular imports in the form of
     #     typecasts.errors ⇆ typecasts.main
-    from typecasts.main import Typecasts
+    from typecasts import Typecasts  # noqa: WPS433
 
 
 @dataclass
@@ -20,6 +20,7 @@ class RedundantIdentity(DocumentedError):
 
     `typecasts` will automatically use an identity function for such
     conversions.
+
     """
 
     typecasts: 'Typecasts'
@@ -62,20 +63,25 @@ class TypecastNotFound(DocumentedError):
 
     @cached_property
     def source_name(self):
+        """Source type name."""
         return self.source_type.__name__
 
     @cached_property
     def destination_name(self):
+        """Destination type name."""
         return self.destination_type.__name__
 
     @cached_property
     def typecasts_name(self):
+        """Typecasts class name."""
         return self.typecasts.__class__.__name__
 
     @property
     def source_name_lower(self):
+        """Lowercase version of source type name."""
         return self.source_name.lower()
 
     @property
     def destination_name_lower(self):
+        """Lowercase version of destination type name."""
         return self.destination_name.lower()

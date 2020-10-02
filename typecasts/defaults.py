@@ -21,4 +21,3 @@ DefaultTypecasts.update({
 DefaultTypecasts.update({
     (float, int): int,
 })
-
