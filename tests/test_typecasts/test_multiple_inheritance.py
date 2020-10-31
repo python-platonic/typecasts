@@ -24,15 +24,17 @@ genders = Typecasts()
 
 @genders.register(Female, str)
 def female_to_string(_female: Female) -> str:
+    """Serialize a Female to a string."""
     return 'She/her'
 
 
 @genders.register(Male, str)
 def male_to_string(_male: Male) -> str:
+    """Serialize a Male to a string."""
     return 'He/his'
 
 
-ERROR_TEXT = r'''Multiple methods to cast one type to another were found.
+ERROR_TEXT = '''Multiple methods to cast one type to another were found.
 
 Attempted to cast:
 
@@ -41,8 +43,10 @@ Attempted to cast:
 
 Available choices:
 
-    <class 'test_typecasts.test_multiple_inheritance.Female'> → <class 'str'> via <function female_to_string at *>
-    <class 'test_typecasts.test_multiple_inheritance.Male'> → <class 'str'> via <function male_to_string at *>
+    <class 'test_typecasts.test_multiple_inheritance.Female'> → <class 'str'> \
+via <function female_to_string at *>
+    <class 'test_typecasts.test_multiple_inheritance.Male'> → <class 'str'> \
+via <function male_to_string at *>
 
 System cannot choose between them because no priority mechanism is currently
 implemented.
@@ -63,11 +67,13 @@ def test_multiple_inheritance():
     with pytest.raises(DuplicatingTypecasts) as err:
         assert genders[Hermaphrodite, str]
 
+    error_text = str(err.value)  # noqa: WPS441
+
     # Replace the dynamic parts of the exception text.
     error_text = re.sub(
         r' at [^>]+',
         ' at *',
-        str(err.value),
+        error_text,
     )
 
     assert error_text == ERROR_TEXT.strip()

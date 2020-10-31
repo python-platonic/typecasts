@@ -1,7 +1,9 @@
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, List, Any, Tuple, Callable
+from typing import TYPE_CHECKING, Any, List
 
-from documented import DocumentedError, Documented
+from documented import Documented, DocumentedError
+
+from typecasts.types import Row
 
 if TYPE_CHECKING:  # pragma: nocover
     # This one is always available in dev environment, we let mypy to use it.
@@ -117,18 +119,14 @@ class DuplicatingTypecasts(DocumentedError):  # type: ignore
 
     # For the purpose of this error class, it does not matter what exact
     # types this list will contain.
-    choices: List[  # type: ignore
-        Tuple[
-            Tuple[Any, Any],
-            Callable[[Any], Any],
-        ]
-    ]
+    choices: List[Row[Any, Any]]  # type: ignore
     source_type: type
     destination_type: type
     typecasts: 'Typecasts'
 
     @property
     def formatted_choices(self):
+        """Format the typecast choices for printing."""
         lines = [
             f'    {source} → {destination} via {cast}'
             for (source, destination), cast in self.choices
