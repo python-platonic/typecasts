@@ -1,9 +1,9 @@
-import typing
 from dataclasses import dataclass
+from typing import TYPE_CHECKING, List, Any, Tuple, Callable
 
 from documented import DocumentedError, Documented
 
-if typing.TYPE_CHECKING:  # pragma: nocover
+if TYPE_CHECKING:  # pragma: nocover
     # This one is always available in dev environment, we let mypy to use it.
     from backports.cached_property import cached_property
 
@@ -94,7 +94,7 @@ class TypecastNotFound(Documented, KeyError):
 
 
 @dataclass
-class DuplicatingTypecasts(DocumentedError):
+class DuplicatingTypecasts(DocumentedError):  # type: ignore
     """
     Multiple methods to cast one type to another were found.
 
@@ -115,7 +115,14 @@ class DuplicatingTypecasts(DocumentedError):
         type in question.
     """
 
-    choices: list
+    # For the purpose of this error class, it does not matter what exact
+    # types this list will contain.
+    choices: List[  # type: ignore
+        Tuple[
+            Tuple[Any, Any],
+            Callable[[Any], Any],
+        ]
+    ]
     source_type: type
     destination_type: type
     typecasts: 'Typecasts'
