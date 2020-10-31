@@ -1,13 +1,12 @@
-from typing import Any, Callable, Dict, Tuple, Type, TypeVar
+from typing import Any, Callable, Dict, Iterable, Optional, Tuple, Type
 
-from typecasts.errors import RedundantIdentity, TypecastNotFound
+from typecasts.errors import (
+    DuplicatingTypecasts,
+    RedundantIdentity,
+    TypecastNotFound,
+)
 from typecasts.identity import identity
-
-SourceType = TypeVar('SourceType')
-DestinationType = TypeVar('DestinationType')
-
-TypePair = Tuple[Type[SourceType], Type[DestinationType]]
-Cast = Callable[[SourceType], DestinationType]
+from typecasts.types import Cast, DestinationType, Row, SourceType
 
 
 # Regrettably, we *have* to use `Any` here. I do not see any other way.
@@ -30,14 +29,20 @@ class Typecasts(Dict[  # type: ignore
         try:
             return super().__getitem__(type_pair)
 
-        except KeyError as err:
-            # FIXME This seems to violate Liskov substitution principle.
-            #   Shall we remove the inheritance from Dict?
-            raise TypecastNotFound(
+        except KeyError:
+            cast_by_inheritance = self._getitem_by_inheritance(
                 source_type=source_type,
                 destination_type=destination_type,
-                typecasts=self,
-            ) from err
+            )
+
+            if cast_by_inheritance:
+                return cast_by_inheritance
+
+        raise TypecastNotFound(
+            source_type=source_type,
+            destination_type=destination_type,
+            typecasts=self,
+        )
 
     def __setitem__(
         self,
@@ -68,3 +73,58 @@ class Typecasts(Dict[  # type: ignore
             return function
 
         return registrar
+
+    def _find_rows_by_inheritance(
+        self,
+        source_type: Type[SourceType],
+        destination_type: Type[DestinationType],
+    ) -> Iterable[Row[SourceType, DestinationType]]:
+        """Find suitable conversion arrows by superclasses of SourceType."""
+        for row in self.items():
+            (source, destination), cast = row
+
+            if (  # noqa: WPS337
+                destination == destination_type and
+                issubclass(source_type, source)
+            ):
+                yield row
+
+    def _getitem_by_inheritance(
+        self,
+        source_type: Type[SourceType],
+        destination_type: Type[DestinationType],
+    ) -> Optional[Cast[SourceType, DestinationType]]:
+        """
+        Given A → B conversion, convert any subclass A' of A to B.
+
+        For example, if `pydantic.BaseModel` → `JSONString` conversion is
+        defined, it will also be used to convert any `CustomPydanticModel`
+        to `JSONString`, where `CustomPydanticModel` is inherited from
+        `pydantic.BaseModel`.
+
+        Ground for this is Liskov Substitution Principle (LSP).
+
+        !!! note
+            This method does not work for `JSONString` → `pydantic.BaseModel`
+        conversions, because for them to work the converting function must be
+        aware of the target class type. Parametric typecasts solve this.
+        """
+        suitable_rows = list(self._find_rows_by_inheritance(
+            source_type=source_type,
+            destination_type=destination_type,
+        ))
+
+        if not suitable_rows:
+            return None
+
+        if len(suitable_rows) > 1:
+            raise DuplicatingTypecasts(
+                choices=suitable_rows,
+                source_type=source_type,
+                destination_type=destination_type,
+                typecasts=self,
+            )
+
+        (_type_pair, cast), = suitable_rows
+
+        return cast
