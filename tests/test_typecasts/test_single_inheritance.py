@@ -26,6 +26,7 @@ def test_inheritance():
         (Parent, str): cast,
     })
 
+    assert casts[Parent, str] == cast
     assert casts[Child, str] == cast
 
 

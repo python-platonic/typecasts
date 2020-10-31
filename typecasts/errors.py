@@ -98,14 +98,14 @@ class DuplicatingTypecasts(DocumentedError):
     """
     Multiple methods to cast one type to another were found.
 
-    Attempted to cast
+    Attempted to cast:
 
         from: {self.source_type}
         to:   {self.destination_type}
 
     Available choices:
 
-        {self.formatted_choices}
+    {self.formatted_choices}
 
     System cannot choose between them because no priority mechanism is currently
     implemented.
