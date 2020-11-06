@@ -1,6 +1,11 @@
+from typing import Type, TypeVar
+
 import pydantic
 
 from typecasts.defaults.base import casts
+
+
+PydanticModel = TypeVar('PydanticModel', bound=pydantic.BaseModel)
 
 
 @casts.register(pydantic.BaseModel, str)
