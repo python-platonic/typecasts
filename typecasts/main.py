@@ -1,4 +1,7 @@
+from functools import partial
 from typing import Any, Callable, Dict, Iterable, Optional, Tuple, Type
+
+from platonic.type_args import generic_type_args
 
 from typecasts.errors import (
     DuplicatingTypecasts,
@@ -6,7 +9,7 @@ from typecasts.errors import (
     TypecastNotFound,
 )
 from typecasts.identity import identity
-from typecasts.types import Cast, DestinationType, Row, SourceType
+from typecasts.types import Cast, DestinationType, Row, SourceType, SubclassOf
 
 
 # Regrettably, we *have* to use `Any` here. I do not see any other way.
@@ -37,6 +40,14 @@ class Typecasts(Dict[  # type: ignore
 
             if cast_by_inheritance:
                 return cast_by_inheritance
+
+            cast_parametric = self._getitem_parametric(
+                source_type=source_type,
+                destination_type=destination_type,
+            )
+
+            if cast_parametric:
+                return cast_parametric
 
         raise TypecastNotFound(
             source_type=source_type,
@@ -128,3 +139,70 @@ class Typecasts(Dict[  # type: ignore
         (_type_pair, cast), = suitable_rows
 
         return cast
+
+    def _find_rows_parametric(
+        self,
+        source_type: Type[SourceType],
+        destination_type: Type[DestinationType],
+    ) -> Iterable[Row[SourceType, DestinationType]]:
+        """Find suitable conversion arrows by DestinationType superclasses."""
+        for row in self.items():
+            (source, destination), cast = row
+
+            if getattr(destination, '__origin__', None) != SubclassOf:
+                continue
+
+            destination_superclass, = generic_type_args(destination)
+
+            if not issubclass(destination_type, destination_superclass):
+                continue
+
+            yield row
+
+    def _getitem_parametric(
+        self,
+        source_type: Type[SourceType],
+        destination_type: Type[DestinationType],
+    ) -> Optional[Cast[SourceType, DestinationType]]:
+        """
+        Given A → SubclassOf[B] conversion, convert any instance of A to a
+        requested subclass of B.
+
+        For example, if `JSONString` → `SubclassOf[pydantic.BaseModel]`
+        conversion is defined, it will be a function with signature
+
+            def convert(value: JSONString, destination_type: Type[T]) -> T:
+
+        where `T` is bound by `pydantic.BaseModel`.
+
+        This function will return
+
+            partial(
+                convert,
+                destination_type=CustomPydanticModel,
+            )
+
+        to preserve the correct signature of a normal conversion function.
+        """
+        suitable_rows = list(self._find_rows_parametric(
+            source_type=source_type,
+            destination_type=destination_type,
+        ))
+
+        if not suitable_rows:
+            return None
+
+        if len(suitable_rows) > 1:
+            raise DuplicatingTypecasts(
+                choices=suitable_rows,
+                source_type=source_type,
+                destination_type=destination_type,
+                typecasts=self,
+            )
+
+        (_type_pair, cast), = suitable_rows
+
+        return partial(
+            cast,
+            destination_type=destination_type,
+        )

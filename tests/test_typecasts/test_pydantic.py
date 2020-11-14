@@ -17,7 +17,6 @@ def test_from_pydantic_to_str():
     assert converter(Wizard(name='Rincewind')) == '{"name": "Rincewind"}'
 
 
-@pytest.mark.skip('Parametric transformations not implemented yet.')
 def test_from_str_to_pydantic():
     """Parse JSON string to pydantic model."""
     parser = casts[str, Wizard]
