@@ -149,6 +149,9 @@ class Typecasts(Dict[  # type: ignore
         for row in self.items():
             (source, destination), cast = row
 
+            if source != source_type:
+                continue
+
             if getattr(destination, '__origin__', None) != SubclassOf:
                 continue
 
