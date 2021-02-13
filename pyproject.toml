@@ -5,7 +5,7 @@ build-backend = "poetry.masonry.api"
 
 [tool.poetry]
 name = "typecasts"
-version = "0.1.5"
+version = "0.1.6"
 description = "Implicit type conversions for Python"
 license = "MIT"
 
@@ -29,7 +29,6 @@ python = "^3.8"
 documented = "^0.1.1"
 "backports.cached-property" = { version = "^1.0.0", python = "<3.8" }
 dataclasses = { version = "0.7", python = ">=3.6, <3.7" }
-platonic = { version = "1.0.0", python = ">=3.8,<4.0" }
 generic-args = "^0.0.1"
 
 [tool.poetry.dev-dependencies]

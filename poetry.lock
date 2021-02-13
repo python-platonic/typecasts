@@ -579,18 +579,6 @@ version = "0.9.1"
 flake8-polyfill = ">=1.0.2,<2"
 
 [[package]]
-category = "main"
-description = "Abstract datastructures for Clean Architecture applications in Python."
-marker = "python_version >= \"3.8\" and python_version < \"4.0\""
-name = "platonic"
-optional = false
-python-versions = ">=3.8,<4.0"
-version = "1.0.0"
-
-[package.dependencies]
-typecasts = ">=0.1.1,<0.2.0"
-
-[[package]]
 category = "dev"
 description = "plugin and hook calling mechanisms for python"
 name = "pluggy"
@@ -1021,7 +1009,7 @@ pygments = ">=2.4,<3.0"
 typing_extensions = ">=3.6,<4.0"
 
 [metadata]
-content-hash = "20c8cf93dafd8136eb9277efe47e28a490de17a7051979a87a2167e5e015527a"
+content-hash = "3fe06ef358cff86d9c9970830009a97c482d3573da9d7fa32b7f474e2690fb31"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -1339,10 +1327,6 @@ pbr = [
 pep8-naming = [
     {file = "pep8-naming-0.9.1.tar.gz", hash = "sha256:a33d38177056321a167decd6ba70b890856ba5025f0a8eca6a3eda607da93caf"},
     {file = "pep8_naming-0.9.1-py2.py3-none-any.whl", hash = "sha256:45f330db8fcfb0fba57458c77385e288e7a3be1d01e8ea4268263ef677ceea5f"},
-]
-platonic = [
-    {file = "platonic-1.0.0-py3-none-any.whl", hash = "sha256:0015c9b4dd1e15521a2f60a34c4dead58083033efe9473b39fc62973310112fe"},
-    {file = "platonic-1.0.0.tar.gz", hash = "sha256:469b70f6d18b262d1c37412c2275a2bf32b9ee5e0eb93c0482ec8ec1ec8960d9"},
 ]
 pluggy = [
     {file = "pluggy-0.13.1-py2.py3-none-any.whl", hash = "sha256:966c145cd83c96502c3c3868f50408687b38434af77734af1e9ca461a4081d2d"},
