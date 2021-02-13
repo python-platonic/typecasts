@@ -1,4 +1,4 @@
-from typing import Callable, Tuple, Type, TypeVar, Generic
+from typing import Callable, Generic, Tuple, Type, TypeVar
 
 SourceType = TypeVar('SourceType')
 DestinationType = TypeVar('DestinationType')
@@ -12,7 +12,7 @@ Row = Tuple[
     Cast[SourceType, DestinationType],
 ]
 
-T = TypeVar('T')
+T = TypeVar('T')  # noqa: WPS111
 
 
 class SubclassOf(Generic[T]):

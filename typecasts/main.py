@@ -1,7 +1,7 @@
 from functools import partial
 from typing import Any, Callable, Dict, Iterable, Optional, Tuple, Type
 
-from platonic.type_args import generic_type_args
+from generic_args import generic_type_args
 
 from typecasts.errors import (
     DuplicatingTypecasts,
@@ -140,7 +140,7 @@ class Typecasts(Dict[  # type: ignore
 
         return cast
 
-    def _find_rows_parametric(
+    def _find_rows_parametric(   # noqa: WPS231
         self,
         source_type: Type[SourceType],
         destination_type: Type[DestinationType],
@@ -158,7 +158,7 @@ class Typecasts(Dict[  # type: ignore
             destination_superclass, = generic_type_args(destination)
 
             if not issubclass(destination_type, destination_superclass):
-                continue
+                continue  # pragma: no cover
 
             yield row
 
@@ -168,8 +168,7 @@ class Typecasts(Dict[  # type: ignore
         destination_type: Type[DestinationType],
     ) -> Optional[Cast[SourceType, DestinationType]]:
         """
-        Given A → SubclassOf[B] conversion, convert any instance of A to a
-        requested subclass of B.
+        Given A → SubclassOf[B], convert instance of A to requested B subclass.
 
         For example, if `JSONString` → `SubclassOf[pydantic.BaseModel]`
         conversion is defined, it will be a function with signature
@@ -195,7 +194,7 @@ class Typecasts(Dict[  # type: ignore
         if not suitable_rows:
             return None
 
-        if len(suitable_rows) > 1:
+        if len(suitable_rows) > 1:  # pragma: no cover
             raise DuplicatingTypecasts(
                 choices=suitable_rows,
                 source_type=source_type,

@@ -1,5 +1,4 @@
 import pydantic
-import pytest
 
 from typecasts import casts
 

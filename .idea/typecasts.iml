@@ -7,6 +7,7 @@
       <excludeFolder url="file://$MODULE_DIR$/dist" />
       <excludeFolder url="file://$MODULE_DIR$/htmlcov" />
       <excludeFolder url="file://$MODULE_DIR$/tests/htmlcov" />
+      <excludeFolder url="file://$MODULE_DIR$/typecasts.egg-info" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.8 (typecasts)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
