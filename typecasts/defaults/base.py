@@ -1,8 +1,12 @@
+import json
 from functools import partial
 
 from typecasts.main import Typecasts
 
 casts = Typecasts()
+
+
+casts[dict, str] = json.dumps
 
 
 # Basic, primitive casts
