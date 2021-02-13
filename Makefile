@@ -3,7 +3,7 @@ SHELL:=/usr/bin/env bash
 .PHONY: lint
 lint:
 	mypy typecasts tests/**/*.py
-	flake8 .
+	flakehell lint typecasts tests
 
 .PHONY: unit
 unit:
