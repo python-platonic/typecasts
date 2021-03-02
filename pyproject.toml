@@ -5,7 +5,7 @@ build-backend = "poetry.masonry.api"
 
 [tool.poetry]
 name = "typecasts"
-version = "0.1.7"
+version = "0.1.8"
 description = "Implicit type conversions for Python"
 license = "MIT"
 
