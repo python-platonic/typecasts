@@ -5,3 +5,6 @@ try:
     from typecasts.defaults import pydantic
 except ImportError:   # pragma: no cover
     ...
+
+
+from typecasts.defaults import dataclass
