@@ -1,6 +1,7 @@
 import pytest
 
 from typecasts import Typecasts
+from typecasts.types import JSONString
 
 
 class Parent:
@@ -24,6 +25,21 @@ def test_inheritance():
     """
     casts = Typecasts({
         (Parent, str): cast,
+    })
+
+    assert casts[Parent, str] == cast
+    assert casts[Child, str] == cast
+
+
+def test_inheritance_and_new_type():
+    """
+    We know how to convert Parent to str.
+
+    This means we know how to convert Child to str, too.
+    """
+    casts = Typecasts({
+        (Parent, str): cast,
+        (JSONString, str): str,
     })
 
     assert casts[Parent, str] == cast
