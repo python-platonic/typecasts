@@ -94,6 +94,9 @@ class Typecasts(Dict[  # type: ignore
         for row in self.items():
             (source, destination), cast = row
 
+            if not isinstance(source, type):
+                continue
+
             if (  # noqa: WPS337
                 destination == destination_type and
                 issubclass(source_type, source)
